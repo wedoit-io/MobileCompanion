@@ -27,11 +27,12 @@
                     HttpStatusCode.Forbidden);
             }
 
+            List<string> result;
             using (var context = new DatabaseEntities())
             {
                 context.ContextOptions.ProxyCreationEnabled = false;
 
-                return context.APIUrl
+                result = context.APIUrl
                     .Where(u => (
                         u.AppCode.ToLower() == appCode.ToLower() &&
                         u.Version.ToLower() == apiVersion.ToLower()))
@@ -39,6 +40,13 @@
                     .Select(u => u.URL)
                     .ToList();
             }
+
+            if (result.Count <= 0)
+            {
+                throw new WebFaultException(HttpStatusCode.NoContent);
+            }
+
+            return result;
         }
     }
 }
