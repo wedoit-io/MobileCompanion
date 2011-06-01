@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLocator", "AppLocator\AppLocator.csproj", "{CC1BEDBC-F197-44B0-BD55-ECF15EBAF5A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APILocator", "APILocator\APILocator.csproj", "{CC1BEDBC-F197-44B0-BD55-ECF15EBAF5A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
