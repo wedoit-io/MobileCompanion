@@ -19,7 +19,7 @@ namespace APILocator.DatabaseModel
     {
         #region Primitive Properties
     
-        public virtual int Id
+        public virtual decimal Id
         {
             get;
             set;
@@ -43,7 +43,7 @@ namespace APILocator.DatabaseModel
             set;
         }
     
-        public virtual Nullable<int> Priority
+        public virtual decimal Priority
         {
             get;
             set;

@@ -23,19 +23,19 @@ namespace APILocator.DatabaseModel
         public DatabaseEntities()
             : base(ConnectionString, ContainerName)
         {
-            this.ContextOptions.LazyLoadingEnabled = false;
+            this.ContextOptions.LazyLoadingEnabled = true;
         }
     
         public DatabaseEntities(string connectionString)
             : base(connectionString, ContainerName)
         {
-            this.ContextOptions.LazyLoadingEnabled = false;
+            this.ContextOptions.LazyLoadingEnabled = true;
         }
     
         public DatabaseEntities(EntityConnection connection)
             : base(connection, ContainerName)
         {
-            this.ContextOptions.LazyLoadingEnabled = false;
+            this.ContextOptions.LazyLoadingEnabled = true;
         }
     
         #endregion
