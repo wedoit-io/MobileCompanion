@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DatabaseModel.Store" Alias="Self" Provider="Oracle.DataAccess.Client" ProviderManifestToken="10g" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="DatabaseModel.Store" Alias="Self" Provider="Oracle.DataAccess.Client" ProviderManifestToken="10g" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="DatabaseModelStoreContainer">
           <EntitySet Name="V_API_URLS" EntityType="DatabaseModel.Store.V_API_URLS" store:Type="Views" store:Schema="IUNI_MM_PROD" store:Name="V_API_URLS">
             <DefiningQuery>SELECT 
@@ -13,7 +13,9 @@
       "V_API_URLS"."API_VERSION" AS "API_VERSION", 
       "V_API_URLS"."API_URL" AS "API_URL", 
       "V_API_URLS"."DES_NOTE" AS "DES_NOTE", 
-      "V_API_URLS"."ORDINAMENTO" AS "ORDINAMENTO"
+      "V_API_URLS"."ORDINAMENTO" AS "ORDINAMENTO", 
+      "V_API_URLS"."FLG_BLOCCO" AS "FLG_BLOCCO", 
+      "V_API_URLS"."DES_MSG" AS "DES_MSG"
       FROM "IUNI_MM_PROD"."V_API_URLS" "V_API_URLS"</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -25,17 +27,20 @@
             <PropertyRef Name="ID" />
             <PropertyRef Name="API_VERSION" />
             <PropertyRef Name="API_URL" />
+            
             <PropertyRef Name="ORDINAMENTO" />
+            <PropertyRef Name="FLG_BLOCCO" />
           </Key>
           <Property Name="ID" Type="number" Nullable="false" Precision="9" />
           <Property Name="APP_CODE" Type="nvarchar2" MaxLength="300" />
           <Property Name="API_VERSION" Type="nvarchar2" Nullable="false" MaxLength="200" />
           <Property Name="API_URL" Type="nvarchar2" Nullable="false" MaxLength="200" />
-          <Property Name="DES_NOTE" Type="nvarchar2" MaxLength="100" />
+          <Property Name="DES_NOTE" Type="nvarchar2" Nullable="false" MaxLength="100" />
           <Property Name="ORDINAMENTO" Type="number" Nullable="false" Precision="10" />
+          <Property Name="FLG_BLOCCO" Type="nvarchar2" Nullable="false" MaxLength="1" />
+          <Property Name="DES_MSG" Type="nvarchar2" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DatabaseModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -48,12 +53,16 @@
             <PropertyRef Name="Version" />
             <PropertyRef Name="URL" />
             <PropertyRef Name="Priority" />
+            <PropertyRef Name="IsInMaintenance" />
           </Key>
           <Property Name="Id" Type="Decimal" Nullable="false" Precision="9" Scale="0" />
           <Property Name="AppCode" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
           <Property Name="Version" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
           <Property Name="URL" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
           <Property Name="Priority" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Type="String" Name="IsInMaintenance" Nullable="false" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MaintenanceNotice" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -62,7 +71,10 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
           <EntitySetMapping Name="APIUrl"><EntityTypeMapping TypeName="DatabaseModel.APIUrl"><MappingFragment StoreEntitySet="V_API_URLS">
-            <ScalarProperty Name="Id" ColumnName="ID" />
+            <ScalarProperty Name="Description" ColumnName="DES_NOTE" />
+                <ScalarProperty Name="MaintenanceNotice" ColumnName="DES_MSG" />
+                <ScalarProperty Name="IsInMaintenance" ColumnName="FLG_BLOCCO" />
+                <ScalarProperty Name="Id" ColumnName="ID" />
             <ScalarProperty Name="AppCode" ColumnName="APP_CODE" />
             <ScalarProperty Name="Version" ColumnName="API_VERSION" />
             <ScalarProperty Name="URL" ColumnName="API_URL" />
@@ -90,7 +102,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="DatabaseModel">
-        <EntityTypeShape EntityType="DatabaseModel.APIUrl" Width="1.5" PointX="0.75" PointY="0.75" Height="1.9802864583333331" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.APIUrl" Width="1.875" PointX="4.375" PointY="1.5" Height="2.5571907552083326" IsExpanded="true" />
       </Diagram>
     </Diagrams>
   </Designer>

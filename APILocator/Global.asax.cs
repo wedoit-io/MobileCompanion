@@ -15,6 +15,8 @@
         private void RegisterRoutes()
         {
             WebServiceHostFactory factory = new WebServiceHostFactory();
+
+            RouteTable.Routes.Add(new ServiceRoute("api/v2", factory, typeof(Version2)));
             RouteTable.Routes.Add(new ServiceRoute("api/v1", factory, typeof(Version1)));
         }
     }

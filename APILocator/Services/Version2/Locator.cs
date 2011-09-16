@@ -3,13 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Runtime.Serialization;
     using System.ServiceModel.Web;
     using APILocator.DatabaseModel;
 
-    public partial class Version1
+    public partial class Version2
     {
         [WebGet(UriTemplate = "urls?app={appCode}&v={apiVersion}")]
-        public List<string> GetURLs(string appCode, string apiVersion)
+        public APILocatorCustomResponse GetURLs(string appCode, string apiVersion)
         {
             this.SetOutgoingResponseFormat("json");
 
@@ -27,7 +28,7 @@
                     HttpStatusCode.Forbidden);
             }
 
-            List<string> result;
+            List<APIUrl> result;
             using (var context = new DatabaseEntities())
             {
                 context.ContextOptions.ProxyCreationEnabled = false;
@@ -37,7 +38,6 @@
                         u.AppCode.ToLower() == appCode.ToLower() &&
                         u.Version.ToLower() == apiVersion.ToLower()))
                     .OrderBy(u => u.Priority)
-                    .Select(u => u.URL)
                     .ToList();
             }
 
@@ -46,7 +46,30 @@
                 throw new WebFaultException(HttpStatusCode.NoContent);
             }
 
-            return result;
+            return new APILocatorCustomResponse(
+                result.Select(u => u.URL).ToList(),
+                result.Any(u => u.IsInMaintenance.ToLower().Equals("s")),
+                result.FirstOrDefault().MaintenanceNotice);
+        }
+
+        [DataContract]
+        public class APILocatorCustomResponse
+        {
+            public APILocatorCustomResponse(List<string> urls, bool isInMaintenance, string maintenanceNotice)
+            {
+                this.URLs = urls;
+                this.IsInMaintenance = isInMaintenance;
+                this.MaintenanceNotice = maintenanceNotice;
+            }
+
+            [DataMember]
+            public List<string> URLs { get; set; }
+
+            [DataMember]
+            public bool IsInMaintenance { get; set; }
+
+            [DataMember]
+            public string MaintenanceNotice { get; set; }
         }
     }
 }

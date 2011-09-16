@@ -48,6 +48,24 @@ namespace APILocator.DatabaseModel
             get;
             set;
         }
+    
+        public virtual string IsInMaintenance
+        {
+            get;
+            set;
+        }
+    
+        public virtual string MaintenanceNotice
+        {
+            get;
+            set;
+        }
+    
+        public virtual string Description
+        {
+            get;
+            set;
+        }
 
         #endregion
     }

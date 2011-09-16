@@ -82,6 +82,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Version2\Locator.cs" />
+    <Compile Include="Services\Version2.cs" />
     <Compile Include="Services\Version1.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
