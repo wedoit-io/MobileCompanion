@@ -41,7 +41,15 @@
                 throw new WebFaultException(HttpStatusCode.NoContent);
             }
 
-            return rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList();
+            // TODO ugly code due 'PRIORITY' field having type of 'long' for Oracle and 'int' for SqlClient
+            if (this.db.Provider == DbHelperProvider.Type.Oracle_DataAccess_Client)
+            {
+                return rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList();
+            }
+            else
+            {
+                return rows.OrderBy(r => r.Field<int>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList();
+            }
         }
     }
 }

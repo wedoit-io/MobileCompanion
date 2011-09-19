@@ -33,7 +33,7 @@
             string queryString =
                 "SELECT   API_URL AS URL, " +
                 "         ORDINAMENTO AS PRIORITY, " +
-                "         DECODE (LOWER (FLG_BLOCCO), 's', 1, 'n', 0, 0) AS IS_MAINT, " +
+                "         FLG_BLOCCO AS IS_MAINT, " +
                 "         DES_MSG AS MAINT_NOTICE " +
                 "  FROM   V_API_URLS ";
 
@@ -48,10 +48,21 @@
                 throw new WebFaultException(HttpStatusCode.NoContent);
             }
 
-            return new APILocatorCustomResponse(
-                rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList(),
-                rows.Any(r => Convert.ToBoolean(r.Field<decimal>("IS_MAINT"))),
-                rows.Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("MAINT_NOTICE"))).Select(r => r.Field<string>("MAINT_NOTICE")).FirstOrDefault());
+            // TODO ugly code due 'PRIORITY' field having type of 'long' for Oracle and 'int' for SqlClient
+            if (this.db.Provider == DbHelperProvider.Type.Oracle_DataAccess_Client)
+            {
+                return new APILocatorCustomResponse(
+                    rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList(),
+                    rows.Any(r => r.Field<string>("IS_MAINT").ToLower().Equals("s")),
+                    rows.Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("MAINT_NOTICE"))).Select(r => r.Field<string>("MAINT_NOTICE")).FirstOrDefault());
+            }
+            else
+            {
+                return new APILocatorCustomResponse(
+                    rows.OrderBy(r => r.Field<int>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList(),
+                    rows.Any(r => r.Field<string>("IS_MAINT").ToLower().Equals("s")),
+                    rows.Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("MAINT_NOTICE"))).Select(r => r.Field<string>("MAINT_NOTICE")).FirstOrDefault());
+            }
         }
 
         [DataContract]
