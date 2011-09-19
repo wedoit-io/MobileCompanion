@@ -1,10 +1,12 @@
 ﻿namespace APILocator
 {
     using System;
+    using System.Configuration;
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Activation;
     using System.ServiceModel.Web;
+    using ApexNetDbHelper;
 
     // Start the service and browse to http://<machine_name>:<port>/<routePrefix>/help to view the service's generated help page
     // NOTE: By default, a new instance of the service is created for each call; change the InstanceContextMode to Single if you want
@@ -15,6 +17,13 @@
     //// NOTE: If the service is renamed, remember to update the global.asax.cs file
     public partial class Version1
     {
+        private DbHelper db;
+
+        public Version1()
+        {
+            this.db = new DbHelper(ConfigurationManager.ConnectionStrings["DBConnection"]);
+        }
+
         protected void SetOutgoingResponseFormat(string format)
         {
             if (string.Equals("json", format, StringComparison.OrdinalIgnoreCase) ||

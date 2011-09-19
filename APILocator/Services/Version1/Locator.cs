@@ -1,10 +1,11 @@
 ﻿namespace APILocator
 {
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Web;
-    using APILocator.DatabaseModel;
+    using ApexNetDbHelper;
 
     public partial class Version1
     {
@@ -27,26 +28,20 @@
                     HttpStatusCode.Forbidden);
             }
 
-            List<string> result;
-            using (var context = new DatabaseEntities())
-            {
-                context.ContextOptions.ProxyCreationEnabled = false;
+            string queryString = "SELECT   API_URL AS URL, ORDINAMENTO AS PRIORITY FROM V_API_URLS ";
 
-                result = context.APIUrl
-                    .Where(u => (
-                        u.AppCode.ToLower() == appCode.ToLower() &&
-                        u.Version.ToLower() == apiVersion.ToLower()))
-                    .OrderBy(u => u.Priority)
-                    .Select(u => u.URL)
-                    .ToList();
-            }
+            DbHelperCommand cmd = this.db.CreateCommand(queryString, CommandType.Text);
+            cmd.AddFilter("APP_CODE", DbType.String, appCode);
+            cmd.AddFilter("API_VERSION", DbType.String, apiVersion);
+            DataSet result = cmd.FillDataSet("URLs");
 
-            if (result.Count <= 0)
+            EnumerableRowCollection<DataRow> rows = result.Tables["URLs"].AsEnumerable();
+            if (rows.Count() <= 0)
             {
                 throw new WebFaultException(HttpStatusCode.NoContent);
             }
 
-            return result;
+            return rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList();
         }
     }
 }

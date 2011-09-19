@@ -1,11 +1,13 @@
 ﻿namespace APILocator
 {
+    using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Net;
     using System.Runtime.Serialization;
     using System.ServiceModel.Web;
-    using APILocator.DatabaseModel;
+    using ApexNetDbHelper;
 
     public partial class Version2
     {
@@ -28,28 +30,28 @@
                     HttpStatusCode.Forbidden);
             }
 
-            List<APIUrl> result;
-            using (var context = new DatabaseEntities())
-            {
-                context.ContextOptions.ProxyCreationEnabled = false;
+            string queryString =
+                "SELECT   API_URL AS URL, " +
+                "         ORDINAMENTO AS PRIORITY, " +
+                "         DECODE (LOWER (FLG_BLOCCO), 's', 1, 'n', 0, 0) AS IS_MAINT, " +
+                "         DES_MSG AS MAINT_NOTICE " +
+                "  FROM   V_API_URLS ";
 
-                result = context.APIUrl
-                    .Where(u => (
-                        u.AppCode.ToLower() == appCode.ToLower() &&
-                        u.Version.ToLower() == apiVersion.ToLower()))
-                    .OrderBy(u => u.Priority)
-                    .ToList();
-            }
+            DbHelperCommand cmd = this.db.CreateCommand(queryString, CommandType.Text);
+            cmd.AddFilter("APP_CODE", DbType.String, appCode);
+            cmd.AddFilter("API_VERSION", DbType.String, apiVersion);
+            DataSet result = cmd.FillDataSet("URLs");
 
-            if (result.Count <= 0)
+            EnumerableRowCollection<DataRow> rows = result.Tables["URLs"].AsEnumerable();
+            if (rows.Count() <= 0)
             {
                 throw new WebFaultException(HttpStatusCode.NoContent);
             }
 
             return new APILocatorCustomResponse(
-                result.Select(u => u.URL).ToList(),
-                result.Any(u => u.IsInMaintenance.ToLower().Equals("s")),
-                result.FirstOrDefault().MaintenanceNotice);
+                rows.OrderBy(r => r.Field<long>("PRIORITY")).Select(r => r.Field<string>("URL")).ToList(),
+                rows.Any(r => Convert.ToBoolean(r.Field<decimal>("IS_MAINT"))),
+                rows.Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("MAINT_NOTICE"))).Select(r => r.Field<string>("MAINT_NOTICE")).FirstOrDefault());
         }
 
         [DataContract]
