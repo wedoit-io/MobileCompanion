@@ -24,6 +24,11 @@
             this.db = new DbHelper(ConfigurationManager.ConnectionStrings["DBConnection"]);
         }
 
+        [WebGet(UriTemplate = "ping")]
+        public void Ping()
+        {
+        }
+
         protected void SetOutgoingResponseFormat(string format)
         {
             if (string.Equals("json", format, StringComparison.OrdinalIgnoreCase) ||
