@@ -1,4 +1,4 @@
-﻿namespace ApexNet
+﻿namespace ApexNet.DRY.Helpers
 {
     using System;
     using System.Configuration;
@@ -7,6 +7,7 @@
     using DevExpress.Xpo.DB;
     using DevExpress.Xpo.Metadata;
 
+    // (Ref.: http://www.devexpress.com/Support/Center/p/K18061.aspx)
     public static class XpoHelper
     {
         private static readonly object lockObject = new object();
@@ -45,17 +46,23 @@
                 "XpoProvider=Oracle",
                 ConfigurationManager.ConnectionStrings["DatabaseConnection"].ConnectionString);
 
-            // search types (via reflection) with XPO's PersistentAttribute applied
-            Type[] types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => t.GetCustomAttributes(typeof(PersistentAttribute), false).Any())
-                .ToArray();
+            XPDictionary dict = new ReflectionDictionary();
+            IDataStore dataStore = XpoDefault.GetConnectionProvider(connectionString, AutoCreateOption.SchemaAlreadyExists);
 
-            XPDictionary dictionary = new ReflectionDictionary();
-            dictionary.GetDataStoreSchema(types);
+            using (SimpleDataLayer inMemoryDataLayer = new SimpleDataLayer(new InMemoryDataStore(AutoCreateOption.SchemaOnly)))
+            {
+                using (Session session = new Session(inMemoryDataLayer))
+                {
+                    // search types (via reflection) with XPO's PersistentAttribute applied
+                    Type[] types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
+                        .Where(t => t.GetCustomAttributes(typeof(PersistentAttribute), false).Any())
+                        .ToArray();
 
-            return new ThreadSafeDataLayer(
-                dictionary,
-                XpoDefault.GetConnectionProvider(connectionString, AutoCreateOption.SchemaAlreadyExists));
+                    session.CreateObjectTypeRecords(types);
+
+                    return new ThreadSafeDataLayer(session.Dictionary, dataStore);
+                }
+            }
         }
     }
 }

@@ -11,7 +11,7 @@
         public static readonly string TypeFacebook = "facebook";
         public static readonly string TypeTwitter = "twitter";
 
-        [DataMember(Name = "object_id")]
+        [DataMember(Name = "objectId")]
         [Persistent("OBJECT_ID"), Key]
         public decimal ObjectId
         {

@@ -4,7 +4,6 @@
     using System.ServiceModel.Activation;
     using System.Web;
     using System.Web.Routing;
-    using DRYNews = ApexNet.DRY.News;
 
     public class Global : HttpApplication
     {
@@ -16,7 +15,7 @@
         private void RegisterRoutes()
         {
             WebServiceHostFactory factory = new WebServiceHostFactory();
-            RouteTable.Routes.Add(new ServiceRoute(string.Empty, factory, typeof(DRYNews.Service)));
+            RouteTable.Routes.Add(new ServiceRoute(string.Empty, factory, typeof(ApexNet.DRY.News.Service)));
         }
     }
 }

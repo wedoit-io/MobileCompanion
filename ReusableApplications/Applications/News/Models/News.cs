@@ -8,7 +8,7 @@
     [Persistent("AN_NWS_OBJ_NEWS")]
     public class News
     {
-        [DataMember(Name = "object_id")]
+        [DataMember(Name = "objectId")]
         [Persistent("OBJECT_ID"), Key]
         public decimal ObjectId
         {

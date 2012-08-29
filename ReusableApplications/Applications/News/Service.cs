@@ -7,6 +7,7 @@
     using System.ServiceModel;
     using System.ServiceModel.Activation;
     using System.ServiceModel.Web;
+    using ApexNet.DRY.Helpers;
     using ApexNet.DRY.News.Models;
     using DevExpress.Xpo;
 
@@ -21,6 +22,22 @@
     {
         private static readonly string OutgoingResponseFormatJson = "json";
         private static readonly string OutgoingResponseFormatXml = "xml";
+
+        [WebGet(UriTemplate = "sources")]
+        public List<Source> GetSourceList()
+        {
+            this.SetOutgoingResponseFormat("json");
+
+            return XpoHelper.GetNewSession().Query<Source>().ToList();
+        }
+
+        [WebGet(UriTemplate = "")]
+        public List<News> GetNewsList()
+        {
+            this.SetOutgoingResponseFormat("json");
+
+            return XpoHelper.GetNewSession().Query<News>().ToList();
+        }
 
         protected void SetOutgoingResponseFormat(string format)
         {
@@ -39,22 +56,6 @@
                     string.Format("Unknown response format '{0}'! Either 'json' or 'xml' must be specified.", format),
                     HttpStatusCode.BadRequest);
             }
-        }
-
-        [WebGet(UriTemplate = "news/sources")]
-        public List<Source> GetSourceList()
-        {
-            this.SetOutgoingResponseFormat("json");
-
-            return XpoHelper.GetNewSession().Query<Source>().ToList();
-        }
-
-        [WebGet(UriTemplate = "news")]
-        public List<News> GetNewsList()
-        {
-            this.SetOutgoingResponseFormat("json");
-
-            return XpoHelper.GetNewSession().Query<News>().ToList();
         }
     }
 }
