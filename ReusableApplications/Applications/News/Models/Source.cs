@@ -7,10 +7,6 @@
     [Persistent("AN_NWS_OBJ_SOURCE")]
     public class Source
     {
-        public static readonly string TypeNone;
-        public static readonly string TypeFacebook = "facebook";
-        public static readonly string TypeTwitter = "twitter";
-
         [DataMember(Name = "objectId")]
         [Persistent("OBJECT_ID"), Key]
         public decimal ObjectId
@@ -33,6 +29,13 @@
         {
             get;
             set;
+        }
+
+        public static class SourceTypes
+        {
+            public static readonly string None;
+            public static readonly string Facebook = "facebook";
+            public static readonly string Twitter = "twitter";
         }
     }
 }
