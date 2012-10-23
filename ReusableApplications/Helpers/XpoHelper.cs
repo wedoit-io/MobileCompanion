@@ -10,7 +10,7 @@
     // (Ref.: http://www.devexpress.com/Support/Center/p/K18061.aspx)
     public static class XpoHelper
     {
-        private static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
         private static volatile IDataLayer dataLayer;
 
         private static IDataLayer DataLayer
@@ -19,7 +19,7 @@
             {
                 if (dataLayer == null)
                 {
-                    lock (lockObject)
+                    lock (LockObject)
                     {
                         if (dataLayer == null)
                         {
