@@ -10,7 +10,7 @@
     {
         [DataMember(Name = "objectId")]
         [Persistent("OBJECT_ID"), Key]
-        public decimal ObjectId
+        public long ObjectId
         {
             get;
             set;
