@@ -1,0 +1,3 @@
+@./AN_NWS_CONS_SOURCE_TYPE.sql;
+@./AN_NWS_OBJ_NEWS.sql;
+@./AN_NWS_OBJ_SOURCE.sql;

@@ -1,0 +1,54 @@
+SET DEFINE OFF;
+Prompt drop TABLE AN_NWS_CONS_SOURCE_TYPE;
+ALTER TABLE AN_NWS_CONS_SOURCE_TYPE
+ DROP PRIMARY KEY CASCADE
+/
+
+DROP TABLE AN_NWS_CONS_SOURCE_TYPE CASCADE CONSTRAINTS PURGE
+/
+
+Prompt Table AN_NWS_CONS_SOURCE_TYPE;
+--
+-- AN_NWS_CONS_SOURCE_TYPE  (Table) 
+--
+CREATE TABLE AN_NWS_CONS_SOURCE_TYPE
+(
+  VALUE  VARCHAR2(50 CHAR)
+)
+/
+
+
+
+
+-- 
+-- Non Foreign Key Constraints for Table AN_NWS_CONS_SOURCE_TYPE 
+-- 
+Prompt Non-Foreign Key Constraints on Table AN_NWS_CONS_SOURCE_TYPE;
+ALTER TABLE AN_NWS_CONS_SOURCE_TYPE ADD (
+  CONSTRAINT AN_NWS_CONS_SOURCE_TYPE_PK
+  PRIMARY KEY
+  (VALUE)
+  USING INDEX
+)
+/
+Insert into AN_NWS_CONS_SOURCE_TYPE
+   (VALUE)
+ Values
+   ('fb-group');
+Insert into AN_NWS_CONS_SOURCE_TYPE
+   (VALUE)
+ Values
+   ('fb-page');
+Insert into AN_NWS_CONS_SOURCE_TYPE
+   (VALUE)
+ Values
+   ('fb-user');
+Insert into AN_NWS_CONS_SOURCE_TYPE
+   (VALUE)
+ Values
+   ('twitter-hashtag');
+Insert into AN_NWS_CONS_SOURCE_TYPE
+   (VALUE)
+ Values
+   ('twitter-user');
+COMMIT;
