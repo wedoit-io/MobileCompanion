@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APILocator", "APILocator\APILocator.csproj", "{CC1BEDBC-F197-44B0-BD55-ECF15EBAF5A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReusableApplications", "ReusableApplications\ReusableApplications.csproj", "{E018B12B-371A-4CF8-9C2E-F23E08317EF7}"
